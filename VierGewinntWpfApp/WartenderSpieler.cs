@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using VierGewinnt.Spiel;
+using VierGewinnt.Spieler;
 
-namespace VierGewinnt.Spieler
+namespace VierGewinntWpfApp
 {
     public class WartenderSpieler : ISpieler
     {

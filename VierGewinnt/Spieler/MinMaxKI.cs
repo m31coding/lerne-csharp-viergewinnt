@@ -3,12 +3,12 @@ using VierGewinnt.Spiel;
 
 namespace VierGewinnt.Spieler
 {
-    public class MinMaxSpieler : ISpieler
+    public class MinMaxKI : ISpieler
     {
         private readonly IHeuristik heuristik;
         private readonly int berechneBisTiefe;
 
-        public MinMaxSpieler(IHeuristik heuristik, int berechnetBisTiefe)
+        public MinMaxKI(IHeuristik heuristik, int berechnetBisTiefe)
         {
             this.heuristik = heuristik;
             this.berechneBisTiefe = berechnetBisTiefe;
