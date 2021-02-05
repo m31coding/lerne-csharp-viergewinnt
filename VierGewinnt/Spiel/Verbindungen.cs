@@ -2,7 +2,10 @@
 {
     public class Verbindungen
     {
-        public Verbindungen(int anzahlZweierverbindungen, int anzahlDreierverbindungen, int anzahlViererverbindungen)
+        public Verbindungen(
+            int anzahlZweierverbindungen,
+            int anzahlDreierverbindungen,
+            int anzahlViererverbindungen)
         {
             AnzahlZweierverbindungen = anzahlZweierverbindungen;
             AnzahlDreierverbindungen = anzahlDreierverbindungen;

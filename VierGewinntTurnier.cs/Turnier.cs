@@ -12,6 +12,8 @@ namespace VierGewinntTurnier.cs
     {
         private readonly int anzahlRunden;
         private readonly List<Turnierspieler> turnierspieler;
+        private int anzahlPartien = 0;
+        private int aktuellePartie = 1;
 
         public Turnier(int anzahlRunden, List<SpielerMitName> spieler)
         {
@@ -19,14 +21,23 @@ namespace VierGewinntTurnier.cs
             this.turnierspieler = spieler.Select(s => new Turnierspieler(s)).ToList();
         }
 
+
         public void TrageTurnierAus()
         {
+            anzahlPartien = GaußscheSummenformel(turnierspieler.Count-1) * anzahlRunden;
+
             for (int i = 0; i < anzahlRunden; i++)
             {
                 TrageRundeAus(i);
             }
 
             BerechnePlatzierungen();
+        }
+
+        // https://de.wikipedia.org/wiki/Gau%C3%9Fsche_Summenformel
+        private static int GaußscheSummenformel(int n)
+        {
+            return (n * n + n) / 2;
         }
 
         private void TrageRundeAus(int runde)
@@ -43,6 +54,8 @@ namespace VierGewinntTurnier.cs
                     {
                         SpielePartie(turnierspieler[j], turnierspieler[i]);
                     }
+
+                    aktuellePartie++;
                 }
             }
         }
@@ -54,7 +67,7 @@ namespace VierGewinntTurnier.cs
 
         private void SpielePartie(Turnierspieler spielerRot, Turnierspieler spielerGelb)
         {
-            Console.Write($"{spielerRot.Name} vs {spielerGelb.Name} ... ");
+            Console.Write($"Partie {aktuellePartie}/{anzahlPartien}: {spielerRot.Name} vs {spielerGelb.Name} ... ");
             Partie partie = new Partie(spielerRot.Spieler, spielerGelb.Spieler, new LeererVisualisierer());
             Spielstand ausgang = partie.SpielePartie();
 

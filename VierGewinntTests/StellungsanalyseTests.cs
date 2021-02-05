@@ -41,6 +41,8 @@ namespace VierGewinntTests
             Stellungsanalyse analyse = Stellungsanalyse.ErstelleAnalyse(stellung);
             Verbindungen verbindungenRotErwartet = new Verbindungen(0, 0, 1);
             Verbindungen verbindungenGelbErwartet = new Verbindungen(1, 0, 0);
+            Assert.AreEqual(4, analyse.AnzahlRoteSteine);
+            Assert.AreEqual(3, analyse.AnzahlGelbeSteine);
             Assert.IsTrue(SindGleich(verbindungenRotErwartet, analyse.VerbindungenRot));
             Assert.IsTrue(SindGleich(verbindungenGelbErwartet, analyse.VerbindungenGelb));
             Assert.AreEqual(Spielstand.RotIstSieger, analyse.Spielstand);
@@ -76,6 +78,8 @@ namespace VierGewinntTests
             Stellungsanalyse analyse = Stellungsanalyse.ErstelleAnalyse(stellung);
             Verbindungen verbindungenRotErwartet = new Verbindungen(1, 1, 0);
             Verbindungen verbindungenGelbErwartet = new Verbindungen(2, 0, 1);
+            Assert.AreEqual(5, analyse.AnzahlRoteSteine);
+            Assert.AreEqual(5, analyse.AnzahlGelbeSteine);
             Assert.IsTrue(SindGleich(verbindungenRotErwartet, analyse.VerbindungenRot));
             Assert.IsTrue(SindGleich(verbindungenGelbErwartet, analyse.VerbindungenGelb));
             Assert.AreEqual(Spielstand.GelbIstSieger, analyse.Spielstand);
@@ -112,6 +116,8 @@ namespace VierGewinntTests
             Stellungsanalyse analyse = Stellungsanalyse.ErstelleAnalyse(stellung);
             Verbindungen verbindungenRotErwartet = new Verbindungen(1, 0, 1);
             Verbindungen verbindungenGelbErwartet = new Verbindungen(5, 1, 0);
+            Assert.AreEqual(6, analyse.AnzahlRoteSteine);
+            Assert.AreEqual(5, analyse.AnzahlGelbeSteine);
             Assert.IsTrue(SindGleich(verbindungenRotErwartet, analyse.VerbindungenRot));
             Assert.IsTrue(SindGleich(verbindungenGelbErwartet, analyse.VerbindungenGelb));
             Assert.AreEqual(Spielstand.RotIstSieger, analyse.Spielstand);

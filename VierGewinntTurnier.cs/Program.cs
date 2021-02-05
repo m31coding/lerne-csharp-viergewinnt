@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using VierGewinnt.Spiel;
+﻿using System.Collections.Generic;
 using VierGewinnt.Spieler;
-using VierGewinnt.Spieler.Heuristiken;
 
 namespace VierGewinntTurnier.cs
 {
@@ -11,7 +8,7 @@ namespace VierGewinntTurnier.cs
         static void Main(string[] args)
         {
             List<SpielerMitName> turnierSpieler = KIs.ErhalteSchnelleKISpieler();
-            Turnier turnier = new Turnier(2, turnierSpieler);
+            Turnier turnier = new Turnier(10, turnierSpieler);
             turnier.TrageTurnierAus();
             turnier.GibBerichtAus();
         }

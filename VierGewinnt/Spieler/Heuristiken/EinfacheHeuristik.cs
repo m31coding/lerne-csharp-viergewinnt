@@ -18,9 +18,11 @@ namespace VierGewinnt.Spieler.Heuristiken
 
             double wertung = 0;
 
+            wertung += analyse.AnzahlRoteSteine;
             wertung += analyse.VerbindungenRot.AnzahlZweierverbindungen;
             wertung += analyse.VerbindungenRot.AnzahlDreierverbindungen;
 
+            wertung -= analyse.AnzahlGelbeSteine;
             wertung -= analyse.VerbindungenGelb.AnzahlZweierverbindungen;
             wertung -= analyse.VerbindungenGelb.AnzahlDreierverbindungen;
 

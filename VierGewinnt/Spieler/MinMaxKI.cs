@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using VierGewinnt.Spiel;
 using VierGewinnt.Spieler.Heuristiken;
@@ -9,11 +10,13 @@ namespace VierGewinnt.Spieler
     {
         private readonly IHeuristik heuristik;
         private readonly int maximaleTiefe;
+        private readonly Random random;
 
         public MinMaxKI(IHeuristik heuristik, int maximaleTiefe)
         {
             this.heuristik = heuristik;
             this.maximaleTiefe = maximaleTiefe;
+            random = new Random();
         }
 
         public Spielzug BerechneNächstenSpielzug(Spielstellung stellung)
@@ -40,12 +43,29 @@ namespace VierGewinnt.Spieler
 
         private BewerteterSpielzug ErhalteSpielzugMitHöchsterBewertung(List<BewerteterSpielzug> züge)
         {
-            return züge.Aggregate((z1, z2) => z2.Wertung > z1.Wertung ? z2 : z1);
+            return züge.Aggregate((z1, z2) => ErhalteZug(z1, z2, true));
         }
 
         private BewerteterSpielzug ErhalteSpielzugMitNiedrigsterBewertung(List<BewerteterSpielzug> züge)
         {
-            return züge.Aggregate((z1, z2) => z2.Wertung < z1.Wertung ? z2 : z1);
+            return züge.Aggregate((z1, z2) => ErhalteZug(z1, z2, false));
+        }
+
+        private BewerteterSpielzug ErhalteZug(BewerteterSpielzug zug1, BewerteterSpielzug zug2, bool höchsteBewertung)
+        {
+            if(zug1.Wertung == zug2.Wertung)
+            {
+                return random.Next(2) == 0 ? zug1 : zug2;
+            }
+
+            if(höchsteBewertung)
+            {
+                return zug1.Wertung > zug2.Wertung ? zug1 : zug2;
+            }
+            else
+            {
+                return zug1.Wertung < zug2.Wertung ? zug1 : zug2;
+            }
         }
 
         private BewerteterSpielzug ErhalteBewertetenSpielzug(Spielzug spielzug, Spielstellung stellung, int tiefe)

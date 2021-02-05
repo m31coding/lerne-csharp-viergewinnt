@@ -23,11 +23,39 @@ namespace VierGewinnt.Spiel
             Spielstand = Spielstand.Offen;
         }
 
+        public Spielstand Spielstand { get; private set; }
+        public int AnzahlRoteSteine { get; private set; }
+        public int AnzahlGelbeSteine { get; private set; }
         public Verbindungen VerbindungenRot { get; }
         public Verbindungen VerbindungenGelb { get; }
-        public Spielstand Spielstand { get; private set; }
 
         private void ErstelleAnalyse()
+        {
+            ZähleSteine();
+            ZähleVerbindungen();
+            Spielstand = ErhalteSpielstand();
+        }
+
+        private void ZähleSteine()
+        {
+            for(int i = 0; i<Spielstellung.AnzahlZeilen; i++)
+            {
+                for(int j = 0; j< Spielstellung.AnzahlSpalten; j++)
+                {
+                    Farbe farbe = stellung.SpielsteinFarbe(i, j);
+                    if(farbe == Farbe.Rot)
+                    {
+                        AnzahlRoteSteine++;
+                    }
+                    else if(farbe == Farbe.Gelb)
+                    {
+                        AnzahlGelbeSteine++;
+                    }
+                }
+            }
+        }
+
+        private void ZähleVerbindungen()
         {
             for (int i = 0; i < Spielstellung.AnzahlZeilen; i++)
             {
@@ -56,10 +84,9 @@ namespace VierGewinnt.Spiel
 
             for (int j = 1; j < Spielstellung.AnzahlSpalten; j++)
             {
-                ZähleVerbindungen(SteineInDiagonaleNachRechtsOben(Spielstellung.AnzahlZeilen-1, j));
+                ZähleVerbindungen(SteineInDiagonaleNachRechtsOben(Spielstellung.AnzahlZeilen - 1, j));
             }
 
-            Spielstand = ErhalteSpielstand();
         }
 
         private Spielstand ErhalteSpielstand()
