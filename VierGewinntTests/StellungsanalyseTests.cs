@@ -10,7 +10,7 @@ namespace VierGewinntTests
         public void SpielstandVonLeererStellungIstOffen()
         {
             Spielstellung stellung = new Spielstellung();
-            Spielstand spielstand = Stellungsanalyse.ErhalteSpielstand(stellung);
+            Spielstand spielstand = Stellungsanalyse.ErstelleAnalyse(stellung).Spielstand;
             Assert.AreEqual(Spielstand.Offen, spielstand);
         }
 
@@ -37,8 +37,13 @@ namespace VierGewinntTests
             brett[3, 2] = Farbe.Rot;
             brett[2, 2] = Farbe.Rot;
 
-            Spielstellung stellung = new Spielstellung(brett, new Spielzug(Farbe.Rot, 2));
-            Assert.AreEqual(Spielstand.RotIstSieger, Stellungsanalyse.ErhalteSpielstand(stellung));
+            Spielstellung stellung = new Spielstellung(brett, Farbe.Gelb);
+            Stellungsanalyse analyse = Stellungsanalyse.ErstelleAnalyse(stellung);
+            Verbindungen verbindungenRotErwartet = new Verbindungen(0, 0, 1);
+            Verbindungen verbindungenGelbErwartet = new Verbindungen(1, 0, 0);
+            Assert.IsTrue(SindGleich(verbindungenRotErwartet, analyse.VerbindungenRot));
+            Assert.IsTrue(SindGleich(verbindungenGelbErwartet, analyse.VerbindungenGelb));
+            Assert.AreEqual(Spielstand.RotIstSieger, analyse.Spielstand);
         }
 
         /*
@@ -53,11 +58,7 @@ namespace VierGewinntTests
          */
 
         [TestMethod]
-        [DataRow(0)]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(3)]
-        public void GelbKannHorizontalGewinnen(int spalteVonLetztemZug)
+        public void GelbKannHorizontalGewinnen()
         {
             Farbe[,] brett = ErhalteLeeresSpielbrett();
             brett[5, 0] = Farbe.Gelb;
@@ -71,8 +72,13 @@ namespace VierGewinntTests
             brett[4, 2] = Farbe.Gelb;
             brett[4, 3] = Farbe.Gelb;
 
-            Spielstellung stellung = new Spielstellung(brett, new Spielzug(Farbe.Gelb, spalteVonLetztemZug));
-            Assert.AreEqual(Spielstand.GelbIstSieger, Stellungsanalyse.ErhalteSpielstand(stellung));
+            Spielstellung stellung = new Spielstellung(brett, Farbe.Rot);
+            Stellungsanalyse analyse = Stellungsanalyse.ErstelleAnalyse(stellung);
+            Verbindungen verbindungenRotErwartet = new Verbindungen(1, 1, 0);
+            Verbindungen verbindungenGelbErwartet = new Verbindungen(2, 0, 1);
+            Assert.IsTrue(SindGleich(verbindungenRotErwartet, analyse.VerbindungenRot));
+            Assert.IsTrue(SindGleich(verbindungenGelbErwartet, analyse.VerbindungenGelb));
+            Assert.AreEqual(Spielstand.GelbIstSieger, analyse.Spielstand);
         }
 
         /*
@@ -87,11 +93,7 @@ namespace VierGewinntTests
          */
 
         [TestMethod]
-        [DataRow(0)]
-        [DataRow(1)]
-        [DataRow(2)]
-        [DataRow(3)]
-        public void RotKannDiagonalGewinnen(int spalteVonLetztemZug)
+        public void RotKannDiagonalGewinnen()
         {
             Farbe[,] brett = ErhalteLeeresSpielbrett();
             brett[5, 0] = Farbe.Rot;
@@ -106,8 +108,13 @@ namespace VierGewinntTests
             brett[3, 3] = Farbe.Gelb;
             brett[2, 3] = Farbe.Rot;
 
-            Spielstellung stellung = new Spielstellung(brett, new Spielzug(Farbe.Rot, spalteVonLetztemZug));
-            Assert.AreEqual(Spielstand.RotIstSieger, Stellungsanalyse.ErhalteSpielstand(stellung));
+            Spielstellung stellung = new Spielstellung(brett, Farbe.Gelb);
+            Stellungsanalyse analyse = Stellungsanalyse.ErstelleAnalyse(stellung);
+            Verbindungen verbindungenRotErwartet = new Verbindungen(1, 0, 1);
+            Verbindungen verbindungenGelbErwartet = new Verbindungen(5, 1, 0);
+            Assert.IsTrue(SindGleich(verbindungenRotErwartet, analyse.VerbindungenRot));
+            Assert.IsTrue(SindGleich(verbindungenGelbErwartet, analyse.VerbindungenGelb));
+            Assert.AreEqual(Spielstand.RotIstSieger, analyse.Spielstand);
         }
 
         /*
@@ -144,13 +151,21 @@ namespace VierGewinntTests
                 }
             }
 
-            Spielstellung stellung = new Spielstellung(brett, new Spielzug(Farbe.Rot, 6));
-            Assert.AreEqual(Spielstand.Unentschieden, Stellungsanalyse.ErhalteSpielstand(stellung));
+            Spielstellung stellung = new Spielstellung(brett, Farbe.Gelb);
+            Stellungsanalyse analyse = Stellungsanalyse.ErstelleAnalyse(stellung);
+            Assert.AreEqual(Spielstand.Unentschieden, analyse.Spielstand);
         }
 
         private Farbe[,] ErhalteLeeresSpielbrett()
         {
             return new Farbe[Spielstellung.AnzahlZeilen, Spielstellung.AnzahlSpalten];
+        }
+
+        private bool SindGleich(Verbindungen verbindungen1, Verbindungen verbindungen2)
+        {
+            return verbindungen1.AnzahlZweierverbindungen == verbindungen2.AnzahlZweierverbindungen &&
+                   verbindungen1.AnzahlDreierverbindungen == verbindungen2.AnzahlDreierverbindungen &&
+                   verbindungen1.AnzahlViererverbindungen == verbindungen2.AnzahlViererverbindungen;
         }
     }
 }

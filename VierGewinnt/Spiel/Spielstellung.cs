@@ -5,51 +5,40 @@ namespace VierGewinnt.Spiel
 {
     public class Spielstellung
     {
-        public const int AnzahlZeilen = 6;
-        public const int AnzahlSpalten = 7;
-
         private readonly Farbe[,] spielbrett;
 
-        public Farbe SpielerAmZug
-        {
-            get
-            {
-                if (LetzterSpielzug == null) return Farbe.Rot; // rot beginnt
-
-                return LetzterSpielzug.Value.Farbe switch
-                {
-                    Farbe.Rot => Farbe.Gelb,
-                    Farbe.Gelb => Farbe.Rot,
-                    Farbe.Keine => Farbe.Keine,
-                    _ => throw new ArgumentException($"Unbekannte Farbe: {LetzterSpielzug.Value.Farbe}.")
-                };
-            }
-        }
-
-        public Spielzug? LetzterSpielzug { get; private set; }
-
-        public Spielstellung(Farbe[,] spielbrett, Spielzug? letzerSpielzug)
+        public Spielstellung(Farbe[,] spielbrett, Farbe spielerAmZug)
         {
             if(spielbrett.GetLength(0) != AnzahlZeilen || spielbrett.GetLength(1) != AnzahlSpalten)
             {
-                throw new ArgumentException($"Das Spielfeld muss eine Größe von 6 x 7 haben!");
+                string fehler = $"Das Spielfeld muss eine Größe von {AnzahlZeilen} x {AnzahlSpalten} haben!";
+                throw new ArgumentException(fehler);
             }
 
             this.spielbrett = spielbrett;
-            LetzterSpielzug = letzerSpielzug;
+            SpielerAmZug = spielerAmZug;
         }
 
         public Spielstellung()
         {
             spielbrett = new Farbe[AnzahlZeilen, AnzahlSpalten];
-            LetzterSpielzug = null;
+            SpielerAmZug = Farbe.Rot;
         }
 
-        public Spielstellung(Spielstellung spielstellung)
+        private Spielstellung(Spielstellung spielstellung)
         {
             spielbrett = new Farbe[AnzahlZeilen, AnzahlSpalten];
             Array.Copy(spielstellung.spielbrett, spielbrett, spielbrett.Length);
-            LetzterSpielzug = spielstellung.LetzterSpielzug;
+            SpielerAmZug = spielstellung.SpielerAmZug;
+        }
+
+        public static int AnzahlZeilen => 6;
+        public static int AnzahlSpalten => 7;
+        public Farbe SpielerAmZug { get; private set; }
+
+        public Spielstellung Kopie()
+        {
+            return new Spielstellung(this);
         }
 
         public Farbe SpielsteinFarbe(int zeile, int spalte)
@@ -62,7 +51,10 @@ namespace VierGewinnt.Spiel
             for (int spalte = 0; spalte < AnzahlSpalten; spalte++)
             {
                 Spielzug spielzug = new Spielzug(SpielerAmZug, spalte);
-                if (SpielzugIstGültig(spielzug)) yield return spielzug;
+                if (SpielzugIstGültig(spielzug))
+                {
+                    yield return spielzug;
+                }
             }
         }
 
@@ -88,7 +80,7 @@ namespace VierGewinnt.Spiel
                 }
             }
 
-            LetzterSpielzug = spielzug;
+            WechsleSpielerAmZug();
         }
 
         private bool FeldIstFrei(int zeile, int spalte)
@@ -99,6 +91,11 @@ namespace VierGewinnt.Spiel
         private void SetzeStein(int zeile, int spalte, Farbe farbe)
         {
             spielbrett[zeile, spalte] = farbe;
+        }
+
+        private void WechsleSpielerAmZug()
+        {
+            SpielerAmZug = SpielerAmZug == Farbe.Rot ? Farbe.Gelb : Farbe.Rot;
         }
     }
 }

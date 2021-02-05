@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using VierGewinnt.Spiel;
 using VierGewinnt.Spieler;
 using VierGewinnt.Visualisierer;
@@ -24,14 +23,14 @@ namespace VierGewinnt
             Spielstellung stellung = new Spielstellung();
             Spielstand spielstand = Spielstand.Offen;
 
-            visualisierer.Visualisiere(new Spielstellung(stellung)); 
+            visualisierer.Visualisiere(stellung.Kopie());
 
-            while(spielstand == Spielstand.Offen)
+            while (spielstand == Spielstand.Offen)
             {
-                Spielzug nächsterZug = ErhalteNächstenSpielzug(new Spielstellung(stellung));
+                Spielzug nächsterZug = ErhalteNächstenSpielzug(stellung.Kopie());
                 stellung.FühreSpielzugAus(nächsterZug);
-                spielstand = Stellungsanalyse.ErhalteSpielstand(stellung);
-                visualisierer.Visualisiere(new Spielstellung(stellung));
+                spielstand = Stellungsanalyse.ErstelleAnalyse(stellung).Spielstand;
+                visualisierer.Visualisiere(stellung.Kopie());
             }
 
             return spielstand;
@@ -39,12 +38,18 @@ namespace VierGewinnt
 
         private Spielzug ErhalteNächstenSpielzug(Spielstellung stellung)
         {
-            return stellung.SpielerAmZug switch
+            if (stellung.SpielerAmZug == Farbe.Rot)
             {
-                Farbe.Rot => spieler1.BerechneNächstenSpielzug(stellung),
-                Farbe.Gelb => spieler2.BerechneNächstenSpielzug(stellung),
-                _ => throw new ArgumentException("Kein Spieler ist am Zug")
-            };
+                return spieler1.BerechneNächstenSpielzug(stellung);
+            }
+            else if (stellung.SpielerAmZug == Farbe.Gelb)
+            {
+                return spieler2.BerechneNächstenSpielzug(stellung);
+            }
+            else
+            {
+                throw new ArgumentException("Kein Spieler ist am Zug");
+            }
         }
     }
 }

@@ -6,9 +6,11 @@ namespace VierGewinnt.Spiel
 {
     public class Stellungsanalyse
     {
-        public static Spielstand ErhalteSpielstand(Spielstellung stellung)
+        public static Stellungsanalyse ErstelleAnalyse(Spielstellung stellung)
         {
-            return new Stellungsanalyse(stellung).ErhalteSpielstand();
+            Stellungsanalyse analyse = new Stellungsanalyse(stellung);
+            analyse.ErstelleAnalyse();
+            return analyse;
         }
 
         private readonly Spielstellung stellung;
@@ -16,67 +18,73 @@ namespace VierGewinnt.Spiel
         private Stellungsanalyse(Spielstellung stellung)
         {
             this.stellung = stellung;
+            VerbindungenRot = new Verbindungen();
+            VerbindungenGelb = new Verbindungen();
+            Spielstand = Spielstand.Offen;
+        }
+
+        public Verbindungen VerbindungenRot { get; }
+        public Verbindungen VerbindungenGelb { get; }
+        public Spielstand Spielstand { get; private set; }
+
+        private void ErstelleAnalyse()
+        {
+            for (int i = 0; i < Spielstellung.AnzahlZeilen; i++)
+            {
+                ZähleVerbindungen(SteineInZeile(i));
+            }
+
+            for (int j = 0; j < Spielstellung.AnzahlSpalten; j++)
+            {
+                ZähleVerbindungen(SteineInSpalte(j));
+            }
+
+            for (int i = 0; i < Spielstellung.AnzahlZeilen; i++)
+            {
+                ZähleVerbindungen(SteineInDiagonaleNachRechtsUnten(i, 0));
+            }
+
+            for (int j = 1; j < Spielstellung.AnzahlSpalten; j++)
+            {
+                ZähleVerbindungen(SteineInDiagonaleNachRechtsUnten(0, j));
+            }
+
+            for (int i = 0; i < Spielstellung.AnzahlZeilen; i++)
+            {
+                ZähleVerbindungen(SteineInDiagonaleNachRechtsOben(i, 0));
+            }
+
+            for (int j = 1; j < Spielstellung.AnzahlSpalten; j++)
+            {
+                ZähleVerbindungen(SteineInDiagonaleNachRechtsOben(Spielstellung.AnzahlZeilen-1, j));
+            }
+
+            Spielstand = ErhalteSpielstand();
         }
 
         private Spielstand ErhalteSpielstand()
         {
-            if (stellung.LetzterSpielzug == null) return Spielstand.Offen;
-            Spielzug letzterSpielzug = stellung.LetzterSpielzug.Value;
-
-            int letzteSpalte = letzterSpielzug.Spalte;
-            int letzteZeile = LetzteZeile(letzterSpielzug);
-
-            if (VierHintereinander(SteineInZeile(letzteZeile), letzterSpielzug.Farbe))
+            if (VerbindungenRot.AnzahlViererverbindungen >= 1)
             {
-                return SiegerfarbeZuSpielstand(letzterSpielzug.Farbe);
+                return Spielstand.RotIstSieger;
             }
-
-            if (VierHintereinander(SteineInSpalte(letzteSpalte), letzterSpielzug.Farbe))
+            else if (VerbindungenGelb.AnzahlViererverbindungen >= 1)
             {
-                return SiegerfarbeZuSpielstand(letzterSpielzug.Farbe);
+                return Spielstand.GelbIstSieger;
             }
-
-            if (VierHintereinander(SteineInDiagonaleNachRechtsUnten(letzteZeile, letzteSpalte), letzterSpielzug.Farbe))
+            else if(ObersteZeileIstVoll())
             {
-                return SiegerfarbeZuSpielstand(letzterSpielzug.Farbe);
+                return Spielstand.Unentschieden;
             }
-
-            if (VierHintereinander(SteineInDiagonaleNachRechtsOben(letzteZeile, letzteSpalte), letzterSpielzug.Farbe))
+            else
             {
-                return SiegerfarbeZuSpielstand(letzterSpielzug.Farbe);
-            }
-
-            if (ObersteZeileIstVoll()) return Spielstand.Unentschieden;
-            else return Spielstand.Offen;
-
-            Spielstand SiegerfarbeZuSpielstand(Farbe farbe)
-            {
-                return farbe switch
-                {
-                    Farbe.Rot => Spielstand.RotIstSieger,
-                    Farbe.Gelb => Spielstand.GelbIstSieger,
-                    _ => throw new ArgumentException($"Siegerfarbe {farbe} kann nicht zu einem Spielstand konvertiert werden.")
-                };
+                return Spielstand.Offen;
             }
         }
 
         private bool ObersteZeileIstVoll()
         {
             return SteineInZeile(0).All(s => s == Farbe.Rot || s == Farbe.Gelb);
-            // return !SteineInZeile(0).Any(s => s == Farbe.Keine);
-        }
-
-        private int LetzteZeile(Spielzug letzterSpielzug)
-        {
-            for (int i = 0; i < Spielstellung.AnzahlZeilen; i++)
-            {
-                if (stellung.SpielsteinFarbe(i, letzterSpielzug.Spalte) != Farbe.Keine)
-                {
-                    return i;
-                }
-            }
-
-            throw new Exception("Kann die Zeile des letzten Spielzugs nicht berechnen!");
         }
 
         private IEnumerable<Farbe> SteineInZeile(int zeile)
@@ -107,7 +115,7 @@ namespace VierGewinnt.Spiel
                 yield return stellung.SpielsteinFarbe(i, j);
                 j++;
 
-                if(j == Spielstellung.AnzahlSpalten)
+                if (j == Spielstellung.AnzahlSpalten)
                 {
                     break;
                 }
@@ -133,27 +141,50 @@ namespace VierGewinnt.Spiel
             }
         }
 
-        private bool VierHintereinander(IEnumerable<Farbe> spielsteine, Farbe farbe)
+        private void ZähleVerbindungen(IEnumerable<Farbe> steine)
         {
-            int anzahlGleicherSteineHintereinander = 0;
+            int anzahlGleicheSteine = 0;
+            Farbe letzterStein = Farbe.Keine;
 
-            foreach (Farbe spielstein in spielsteine)
+            foreach(Farbe stein in steine)
             {
-                if (spielstein == farbe)
+                if(stein == letzterStein)
                 {
-                    anzahlGleicherSteineHintereinander++;
-                    if (anzahlGleicherSteineHintereinander == 4)
-                    {
-                        return true;
-                    }
+                    anzahlGleicheSteine++;
                 }
                 else
                 {
-                    anzahlGleicherSteineHintereinander = 0;
+                    WerteAus(anzahlGleicheSteine, letzterStein);
+                    anzahlGleicheSteine = 1;
+                    letzterStein = stein;
                 }
             }
 
-            return false;
+            WerteAus(anzahlGleicheSteine, letzterStein);
+        }
+
+        private void WerteAus(int anzahlGleicheSteine, Farbe farbe)
+        {
+            if(anzahlGleicheSteine <= 1 || farbe == Farbe.Keine)
+            {
+                return;
+            }
+
+            Verbindungen verbindungen = 
+                farbe == Farbe.Rot ? VerbindungenRot : VerbindungenGelb;
+
+            if (anzahlGleicheSteine == 2)
+            {
+                verbindungen.AnzahlZweierverbindungen++;
+            }
+            else if (anzahlGleicheSteine == 3)
+            {
+                verbindungen.AnzahlDreierverbindungen++;
+            }
+            else if (anzahlGleicheSteine == 4)
+            {
+                verbindungen.AnzahlViererverbindungen++;
+            }
         }
     }
 }
