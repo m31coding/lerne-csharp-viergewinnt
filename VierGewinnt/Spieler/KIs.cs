@@ -5,13 +5,13 @@ namespace VierGewinnt.Spieler
 {
     public static class KIs
     {
-        public static IReadOnlyCollection<ISpieler> ErhalteKISpieler()
+        public static List<SpielerMitName> ErhalteKISpieler()
         {
-            List<ISpieler> spieler = new List<ISpieler>
-            {
-                new MisterBoring(),
-                new MissRandom(new Random())
-            };
+            List<SpielerMitName> spieler = new List<SpielerMitName>();
+
+            spieler.Add(new SpielerMitName(new MisterBoring(), "Mister Boring"));
+            spieler.Add(new SpielerMitName(new MissRandom(new Random()), "Miss Random"));
+
             return spieler;
         }
     }

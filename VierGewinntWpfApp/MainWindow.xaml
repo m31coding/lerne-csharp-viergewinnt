@@ -21,11 +21,34 @@
             <RowDefinition
                 Height="9*"></RowDefinition>
         </Grid.RowDefinitions>
-        <Button
-            Grid.Row="0"
-            VerticalAlignment="Center"
+        <StackPanel
+            Orientation="Horizontal"
             HorizontalAlignment="Center"
-            Click="NeuesSpielButtonClicked">Neues Spiel</Button>
+            VerticalAlignment="Center"
+            Grid.Row="0">
+            <Button
+                Margin="5"
+                Click="NeuesSpielButtonClicked">Neues Spiel</Button>
+            <TextBlock
+                VerticalAlignment="Center"
+                Margin="5, 0, 0, 0"
+                Text="KI:">
+            </TextBlock>
+            <ComboBox
+                Margin="5"
+                Name="kiListe"
+                SelectionChanged="KiAusgewählt">
+                <ComboBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel
+                            Orientation="Horizontal">
+                            <TextBlock
+                                Text="{Binding Name}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ComboBox.ItemTemplate>
+            </ComboBox>
+        </StackPanel>
         <Viewbox
             Margin="10"
             Grid.Row="1"

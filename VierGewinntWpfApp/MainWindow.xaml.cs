@@ -5,7 +5,7 @@ using System.Windows.Controls;
 using VierGewinnt;
 using VierGewinnt.Spiel;
 using VierGewinnt.Spieler;
-using VierGewinnt.Visualisierer;
+using VierGewinntWpfApp.Spieler;
 
 namespace VierGewinntWpfApp
 {
@@ -15,33 +15,66 @@ namespace VierGewinntWpfApp
     public partial class MainWindow : Window
     {
         private GuiSpieler? aktuellerGuiSpieler;
+        private VeränderbarerSpieler kiSpieler;
 
         public MainWindow()
         {
             InitializeComponent();
+            kiSpieler = new VeränderbarerSpieler(null!);
         }
 
-        private async void WindowContentRendered(object sender, EventArgs e)
+        private void WindowContentRendered(object sender, EventArgs e)
         {
-            await NeuesSpiel();
+            ErstelleKIs();
+        }
+
+        private void ErstelleKIs()
+        {
+            int zuvorAusgewählt = kiListe.SelectedIndex;
+            kiListe.ItemsSource = KIs.ErhalteKISpieler();
+            kiListe.SelectedIndex = zuvorAusgewählt == -1 ? 0 : zuvorAusgewählt;
+        }
+
+        private void KiAusgewählt(object sender, SelectionChangedEventArgs e)
+        {
+            SpielerMitName spielerMitName = (SpielerMitName)kiListe.SelectedItem;
+            
+            if(spielerMitName == null) 
+            {
+                return;
+            }
+
+            kiSpieler.Spieler = spielerMitName.Spieler;
         }
 
         private async void NeuesSpielButtonClicked(object sender, RoutedEventArgs e)
         {
-            if(aktuellerGuiSpieler != null)
+            if (aktuellerGuiSpieler != null)
             {
                 aktuellerGuiSpieler.Abbruch();
             }
 
-            await NeuesSpiel();
+            ErstelleKIs();
+            Farbe farbeGuiSpieler = StartspielerAbfrage();
+            await NeuesSpiel(farbeGuiSpieler);
         }
 
-        private async Task NeuesSpiel()
+        private Farbe StartspielerAbfrage()
+        {
+            string text = "Möchtest du Rot sein? (Rot beginnt)";
+            string überschrift = "Startspieler";
+            MessageBoxButton button = MessageBoxButton.YesNo;
+            MessageBoxImage icon = MessageBoxImage.Question;
+            MessageBoxResult abfrageErgebnis = MessageBox.Show(text, überschrift, button, icon);
+            return abfrageErgebnis == MessageBoxResult.Yes ? Farbe.Rot : Farbe.Gelb;
+        }
+
+        private async Task NeuesSpiel(Farbe farbeGuiSpieler)
         {
             Canvas canvas = new Canvas()
             {
-                Height=Spielstellung.AnzahlZeilen,
-                Width=Spielstellung.AnzahlSpalten
+                Height = Spielstellung.AnzahlZeilen,
+                Width = Spielstellung.AnzahlSpalten
             };
 
             Viewbox.Child = canvas;
@@ -50,9 +83,18 @@ namespace VierGewinntWpfApp
             aktuellerGuiSpieler = new GuiSpieler();
             visualisierer.AufSpalteGeklickt += spalte => aktuellerGuiSpieler.WähleSpalte(spalte);
 
-            Partie partie = new Partie(aktuellerGuiSpieler, ErhalteKI(), visualisierer);
+            ISpieler spieler1 = aktuellerGuiSpieler;
+            ISpieler spieler2 = kiSpieler;
+
+            if (farbeGuiSpieler == Farbe.Gelb)
+            {
+                spieler1 = spieler2;
+                spieler2 = aktuellerGuiSpieler;
+            }
+
+            Partie partie = new Partie(spieler1, spieler2, visualisierer);
             Spielstand spielausgang = await SpielePartie(partie);
-            
+
             if (spielausgang != Spielstand.Spielabbruch)
             {
                 MessageBox.Show(Ausgabe(spielausgang));
@@ -65,7 +107,7 @@ namespace VierGewinntWpfApp
             {
                 return await Task.Run(() => partie.SpielePartie());
             }
-            catch(OperationCanceledException)
+            catch (OperationCanceledException)
             {
                 return Spielstand.Spielabbruch;
             }
@@ -73,20 +115,22 @@ namespace VierGewinntWpfApp
 
         private string Ausgabe(Spielstand spielausgang)
         {
-            return spielausgang switch
+            if (spielausgang == Spielstand.RotIstSieger)
             {
-                Spielstand.RotIstSieger => "Rot hat gewonnen!",
-                Spielstand.GelbIstSieger => "Gelb hat gewonnen!",
-                Spielstand.Unentschieden => "Unentschieden!",
-                _ => throw new ArgumentException($"Unerwarteter Spielausgang: {spielausgang}.")
-            };
-        }
-
-        private ISpieler ErhalteKI()
-        {
-            Random zahlengenerator = new Random();
-            MissRandom missRandom = new MissRandom(zahlengenerator);
-            return new WartenderSpieler(missRandom, 1000);
+                return "Rot hat gewonnen!";
+            }
+            else if (spielausgang == Spielstand.GelbIstSieger)
+            {
+                return "Gelb hat gewonnen!";
+            }
+            else if (spielausgang == Spielstand.Unentschieden)
+            {
+                return "Unentschieden!";
+            }
+            else
+            {
+                throw new ArgumentException($"Unerwarteter Spielausgang: {spielausgang}.");
+            }
         }
     }
 }

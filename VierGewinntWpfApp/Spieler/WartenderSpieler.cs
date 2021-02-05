@@ -2,7 +2,7 @@
 using VierGewinnt.Spiel;
 using VierGewinnt.Spieler;
 
-namespace VierGewinntWpfApp
+namespace VierGewinntWpfApp.Spieler
 {
     public class WartenderSpieler : ISpieler
     {

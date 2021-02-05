@@ -5,7 +5,7 @@ using System.Threading;
 using VierGewinnt.Spiel;
 using VierGewinnt.Spieler;
 
-namespace VierGewinntWpfApp
+namespace VierGewinntWpfApp.Spieler
 {
     public class GuiSpieler : ISpieler
     {
