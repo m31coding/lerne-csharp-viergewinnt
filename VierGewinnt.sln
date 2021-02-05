@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VierGewinntTests", "VierGew
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VierGewinntWpfApp", "VierGewinntWpfApp\VierGewinntWpfApp.csproj", "{850DD407-FFA8-42B0-861B-B0F56838C09A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VierGewinntTurnier.cs", "VierGewinntTurnier.cs\VierGewinntTurnier.cs.csproj", "{8549F86C-9B70-4A64-9886-B36592CFC9E5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{850DD407-FFA8-42B0-861B-B0F56838C09A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{850DD407-FFA8-42B0-861B-B0F56838C09A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{850DD407-FFA8-42B0-861B-B0F56838C09A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8549F86C-9B70-4A64-9886-B36592CFC9E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8549F86C-9B70-4A64-9886-B36592CFC9E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8549F86C-9B70-4A64-9886-B36592CFC9E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8549F86C-9B70-4A64-9886-B36592CFC9E5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
