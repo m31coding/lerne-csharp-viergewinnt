@@ -21,8 +21,8 @@ namespace VierGewinnt.Spieler.Heuristiken
             wertung += analyse.VerbindungenRot.AnzahlZweierverbindungen;
             wertung += analyse.VerbindungenRot.AnzahlDreierverbindungen;
 
-            wertung -= analyse.VerbindungenRot.AnzahlZweierverbindungen;
-            wertung -= analyse.VerbindungenRot.AnzahlDreierverbindungen;
+            wertung -= analyse.VerbindungenGelb.AnzahlZweierverbindungen;
+            wertung -= analyse.VerbindungenGelb.AnzahlDreierverbindungen;
 
             return wertung;
         }

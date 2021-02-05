@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using VierGewinnt.Spiel;
 using VierGewinnt.Spieler;
 using VierGewinnt.Spieler.Heuristiken;
@@ -9,17 +10,10 @@ namespace VierGewinntTurnier.cs
     {
         static void Main(string[] args)
         {
-            ISpieler ki = new MinMaxKI(new EinfacheHeuristik(), 2);
-
-            Spielstellung stellung = new Spielstellung();
-            stellung.FühreSpielzugAus(new Spielzug(Farbe.Rot, 2));
-            stellung.FühreSpielzugAus(new Spielzug(Farbe.Gelb, 0));
-            stellung.FühreSpielzugAus(new Spielzug(Farbe.Rot, 2));
-            stellung.FühreSpielzugAus(new Spielzug(Farbe.Gelb, 0));
-            stellung.FühreSpielzugAus(new Spielzug(Farbe.Rot, 2));
-            //stellung.FühreSpielzugAus(new Spielzug(Farbe.Gelb, 0));
-
-            Spielzug spielzug = ki.BerechneNächstenSpielzug(stellung);
+            List<SpielerMitName> turnierSpieler = KIs.ErhalteSchnelleKISpieler();
+            Turnier turnier = new Turnier(2, turnierSpieler);
+            turnier.TrageTurnierAus();
+            turnier.GibBerichtAus();
         }
     }
 }

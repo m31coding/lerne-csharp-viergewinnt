@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using VierGewinnt.Spiel;
 using VierGewinnt.Spieler.Heuristiken;
@@ -53,12 +52,6 @@ namespace VierGewinnt.Spieler
         {
             return new BewerteterSpielzug(spielzug, BewerteSpielzugFürRot(spielzug, stellung, tiefe));
         }
-
-        //private double BewerteSpielzug(Spielzug spielzug, Spielstellung stellung, int tiefe)
-        //{
-        //    double bewertungFürRot = BewerteSpielzugFürRot(spielzug, stellung, tiefe);
-        //    return spielzug.Farbe == Farbe.Rot ? bewertungFürRot : -bewertungFürRot;
-        //}
 
         private double BewerteSpielzugFürRot(Spielzug spielzug, Spielstellung stellung, int tiefe)
         {

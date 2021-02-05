@@ -12,9 +12,37 @@ namespace VierGewinnt.Spieler
 
             spieler.Add(new SpielerMitName(new MisterBoring(), "Mister Boring"));
             spieler.Add(new SpielerMitName(new MissRandom(new Random()), "Miss Random"));
-            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 4), "MinMax Tiefe 4"));
-            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 4), "MinMax Tiefe 8"));
-            spieler.Add(new SpielerMitName(new MinMaxKI(new MeineHeuristik(), 8), "Meine KI Tiefe 8"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 2), "Einfache KI Tiefe 2"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 4), "Einfache KI Tiefe 4"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 6), "Einfache KI Tiefe 6"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new MeineHeuristik(), 2), "Meine KI Tiefe 2"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new MeineHeuristik(), 4), "Meine KI Tiefe 4"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new MeineHeuristik(), 6), "Meine KI Tiefe 6"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new LooserHeuristik(new EinfacheHeuristik()), 2), "Looser"));
+
+            return spieler;
+        }
+
+        public static List<SpielerMitName> ErhalteSchnelleKISpieler()
+        {
+            List<SpielerMitName> spieler = new List<SpielerMitName>();
+
+            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 1), "Einfache KI Tiefe 1"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 2), "Einfache KI Tiefe 2"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 3), "Einfache KI Tiefe 3"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 4), "Einfache KI Tiefe 4"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 4), "Einfache KI Tiefe 5"));
+
+
+
+            //spieler.Add(new SpielerMitName(new MisterBoring(), "Mister Boring"));
+            //spieler.Add(new SpielerMitName(new MissRandom(new Random()), "Miss Random"));
+            //spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 2), "Einfache KI Tiefe 2"));
+            //spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 4), "Einfache KI Tiefe 4"));
+            //spieler.Add(new SpielerMitName(new MinMaxKI(new MeineHeuristik(), 2), "Meine KI Tiefe 2"));
+            //spieler.Add(new SpielerMitName(new MinMaxKI(new MeineHeuristik(), 4), "Meine KI Tiefe 4"));
+            //spieler.Add(new SpielerMitName(new MinMaxKI(new LooserHeuristik(new EinfacheHeuristik()), 2), "Looser"));
+
             return spieler;
         }
     }

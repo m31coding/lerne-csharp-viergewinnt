@@ -7,14 +7,14 @@ namespace VierGewinnt
 {
     public class Partie
     {
-        private readonly ISpieler spieler1;
-        private readonly ISpieler spieler2;
+        private readonly ISpieler spielerRot;
+        private readonly ISpieler spielerGelb;
         private readonly IVisualisierer visualisierer;
 
-        public Partie(ISpieler spieler1, ISpieler spieler2, IVisualisierer visualisierer)
+        public Partie(ISpieler spielerRot, ISpieler spielerGelb, IVisualisierer visualisierer)
         {
-            this.spieler1 = spieler1;
-            this.spieler2 = spieler2;
+            this.spielerRot = spielerRot;
+            this.spielerGelb = spielerGelb;
             this.visualisierer = visualisierer;
         }
 
@@ -40,11 +40,11 @@ namespace VierGewinnt
         {
             if (stellung.SpielerAmZug == Farbe.Rot)
             {
-                return spieler1.BerechneNächstenSpielzug(stellung);
+                return spielerRot.BerechneNächstenSpielzug(stellung);
             }
             else if (stellung.SpielerAmZug == Farbe.Gelb)
             {
-                return spieler2.BerechneNächstenSpielzug(stellung);
+                return spielerGelb.BerechneNächstenSpielzug(stellung);
             }
             else
             {
