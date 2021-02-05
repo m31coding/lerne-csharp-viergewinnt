@@ -15,9 +15,11 @@ namespace VierGewinnt.Spieler
             spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 2), "Einfache KI Tiefe 2"));
             spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 4), "Einfache KI Tiefe 4"));
             spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 6), "Einfache KI Tiefe 6"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new EinfacheHeuristik(), 7), "Einfache KI Tiefe 7"));
             spieler.Add(new SpielerMitName(new MinMaxKI(new MeineHeuristik(), 2), "Meine KI Tiefe 2"));
             spieler.Add(new SpielerMitName(new MinMaxKI(new MeineHeuristik(), 4), "Meine KI Tiefe 4"));
             spieler.Add(new SpielerMitName(new MinMaxKI(new MeineHeuristik(), 6), "Meine KI Tiefe 6"));
+            spieler.Add(new SpielerMitName(new MinMaxKI(new MeineHeuristik(), 7), "Meine KI Tiefe 7"));
             spieler.Add(new SpielerMitName(new MinMaxKI(new LooserHeuristik(new EinfacheHeuristik()), 2), "Looser"));
 
             return spieler;
