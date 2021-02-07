@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using VierGewinnt.Spieler;
 
-namespace VierGewinntTurnier.cs
+namespace VierGewinntTurnier
 {
     class Program
     {
         static void Main(string[] args)
         {
             List<SpielerMitName> turnierSpieler = KIs.ErhalteSchnelleKISpieler();
-            Turnier turnier = new Turnier(10, turnierSpieler);
+            Turnier turnier = new Turnier(20, turnierSpieler);
             turnier.TrageTurnierAus();
             turnier.GibBerichtAus();
         }

@@ -2,14 +2,14 @@
 {
     public readonly struct Spielzug
     {
-        public Farbe Farbe { get; }
-        public int Spalte { get; }
-
         public Spielzug(Farbe farbe, int spalte)
         {
             Farbe = farbe;
             Spalte = spalte;
         }
+
+        public Farbe Farbe { get; }
+        public int Spalte { get; }
 
         public override string ToString()
         {

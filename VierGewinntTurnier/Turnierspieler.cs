@@ -1,6 +1,6 @@
 ﻿using VierGewinnt.Spieler;
 
-namespace VierGewinntTurnier.cs
+namespace VierGewinntTurnier
 {
     public class Turnierspieler
     {

@@ -6,7 +6,7 @@ using VierGewinnt.Spiel;
 using VierGewinnt.Spieler;
 using VierGewinnt.Visualisierer;
 
-namespace VierGewinntTurnier.cs
+namespace VierGewinntTurnier
 {
     public class Turnier
     {
