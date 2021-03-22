@@ -12,11 +12,11 @@ namespace VierGewinnt.Spieler
         private readonly int maximaleTiefe;
         private readonly Random random;
 
-        public MinMaxKI(IHeuristik heuristik, int maximaleTiefe)
+        public MinMaxKI(IHeuristik heuristik, int maximaleTiefe, Random random)
         {
             this.heuristik = heuristik;
             this.maximaleTiefe = maximaleTiefe;
-            random = new Random();
+            this.random = random;
         }
 
         public Spielzug BerechneNächstenSpielzug(Spielstellung stellung)

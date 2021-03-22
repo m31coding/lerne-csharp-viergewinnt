@@ -28,7 +28,7 @@ namespace VierGewinntTests
         [TestMethod]
         public void RotKannVertikalGewinnen()
         {
-            Farbe[,] brett = ErhalteLeeresSpielbrett();
+            Farbe[,] brett = TestHelfer.ErhalteLeeresSpielbrett();
             brett[5, 1] = Farbe.Gelb;
             brett[5, 2] = Farbe.Rot;
             brett[5, 3] = Farbe.Gelb;
@@ -62,7 +62,7 @@ namespace VierGewinntTests
         [TestMethod]
         public void GelbKannHorizontalGewinnen()
         {
-            Farbe[,] brett = ErhalteLeeresSpielbrett();
+            Farbe[,] brett = TestHelfer.ErhalteLeeresSpielbrett();
             brett[5, 0] = Farbe.Gelb;
             brett[5, 1] = Farbe.Rot;
             brett[5, 2] = Farbe.Rot;
@@ -99,7 +99,7 @@ namespace VierGewinntTests
         [TestMethod]
         public void RotKannDiagonalGewinnen()
         {
-            Farbe[,] brett = ErhalteLeeresSpielbrett();
+            Farbe[,] brett = TestHelfer.ErhalteLeeresSpielbrett();
             brett[5, 0] = Farbe.Rot;
             brett[5, 1] = Farbe.Gelb;
             brett[5, 2] = Farbe.Gelb;
@@ -125,6 +125,45 @@ namespace VierGewinntTests
 
         /*
          *      0 1 2 3 4 5 6   
+         *   0  - - - - - - -
+         *   1  - - - - - - -
+         *   2  - - - G - - -
+         *   3  - - - R G - -
+         *   4  - - R R R G -
+         *   5  - - R R G G G
+         *   
+         */
+
+        [TestMethod]
+        public void GelbKannDiagonalGewinnen()
+        {
+            Farbe[,] brett = TestHelfer.ErhalteLeeresSpielbrett();
+            brett[5, 2] = Farbe.Rot;
+            brett[5, 3] = Farbe.Rot;
+            brett[5, 4] = Farbe.Gelb;
+            brett[5, 5] = Farbe.Gelb;
+            brett[5, 6] = Farbe.Gelb;
+            brett[4, 2] = Farbe.Rot;
+            brett[4, 3] = Farbe.Rot;
+            brett[4, 4] = Farbe.Rot;
+            brett[4, 5] = Farbe.Gelb;
+            brett[3, 3] = Farbe.Rot;
+            brett[3, 4] = Farbe.Gelb;
+            brett[2, 3] = Farbe.Gelb;
+
+            Spielstellung stellung = new Spielstellung(brett, Farbe.Gelb);
+            Stellungsanalyse analyse = Stellungsanalyse.ErstelleAnalyse(stellung);
+            Verbindungen verbindungenRotErwartet = new Verbindungen(7, 2, 0);
+            Verbindungen verbindungenGelbErwartet = new Verbindungen(2, 1, 1);
+            Assert.AreEqual(6, analyse.AnzahlRoteSteine);
+            Assert.AreEqual(6, analyse.AnzahlGelbeSteine);
+            Assert.IsTrue(SindGleich(verbindungenRotErwartet, analyse.VerbindungenRot));
+            Assert.IsTrue(SindGleich(verbindungenGelbErwartet, analyse.VerbindungenGelb));
+            Assert.AreEqual(Spielstand.GelbIstSieger, analyse.Spielstand);
+        }
+
+        /*
+         *      0 1 2 3 4 5 6   
          *   0  R G R G R G R
          *   1  R G R G R G R
          *   2  G R G R G R G
@@ -137,7 +176,7 @@ namespace VierGewinntTests
         [TestMethod]
         public void KannUnentschiedenSpielen()
         {
-            Farbe[,] brett = ErhalteLeeresSpielbrett();
+            Farbe[,] brett = TestHelfer.ErhalteLeeresSpielbrett();
 
             FülleZeileAbwechselnd(0, Farbe.Rot);
             FülleZeileAbwechselnd(1, Farbe.Rot);
@@ -160,11 +199,6 @@ namespace VierGewinntTests
             Spielstellung stellung = new Spielstellung(brett, Farbe.Gelb);
             Stellungsanalyse analyse = Stellungsanalyse.ErstelleAnalyse(stellung);
             Assert.AreEqual(Spielstand.Unentschieden, analyse.Spielstand);
-        }
-
-        private Farbe[,] ErhalteLeeresSpielbrett()
-        {
-            return new Farbe[Spielstellung.AnzahlZeilen, Spielstellung.AnzahlSpalten];
         }
 
         private bool SindGleich(Verbindungen verbindungen1, Verbindungen verbindungen2)

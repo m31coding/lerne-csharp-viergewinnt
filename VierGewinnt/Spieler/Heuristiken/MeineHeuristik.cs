@@ -2,7 +2,7 @@
 
 namespace VierGewinnt.Spieler.Heuristiken
 {
-    class MeineHeuristik : IHeuristik
+    public class MeineHeuristik : IHeuristik
     {
         public double BewerteSpielstellungFürRot(Spielstellung stellung, Stellungsanalyse analyse)
         {

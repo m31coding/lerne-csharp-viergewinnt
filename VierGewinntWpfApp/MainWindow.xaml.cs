@@ -31,7 +31,7 @@ namespace VierGewinntWpfApp
         private void ErstelleKIs()
         {
             int zuvorAusgewählt = kiListe.SelectedIndex;
-            kiListe.ItemsSource = KIs.ErhalteKISpieler();
+            kiListe.ItemsSource = KIs.ErstelleKISpieler();
             kiListe.SelectedIndex = zuvorAusgewählt == -1 ? 0 : zuvorAusgewählt;
         }
 

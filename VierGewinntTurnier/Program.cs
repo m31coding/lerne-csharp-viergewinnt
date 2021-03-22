@@ -7,7 +7,7 @@ namespace VierGewinntTurnier
     {
         static void Main(string[] args)
         {
-            List<SpielerMitName> turnierSpieler = KIs.ErhalteSchnelleKISpieler();
+            List<SpielerMitName> turnierSpieler = KIs.ErstelleSchnelleKISpieler();
             Turnier turnier = new Turnier(20, turnierSpieler);
             turnier.TrageTurnierAus();
             turnier.GibBerichtAus();
