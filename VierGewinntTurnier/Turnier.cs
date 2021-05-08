@@ -124,7 +124,7 @@ namespace VierGewinntTurnier
         private void GibZeileAus(Turnierspieler spieler)
         {
             Console.WriteLine($"{spieler.Platzierung}.: {spieler.Name}, {spieler.Punkte} Punkte, " +
-                $"{spieler.Siege} Siege, {spieler.Unentschieden}, Unentschieden, {spieler.Niederlagen} Niederlagen)");
+                $"{spieler.Siege} Siege, {spieler.Unentschieden} Unentschieden, {spieler.Niederlagen} Niederlagen)");
         }
     }
 }
