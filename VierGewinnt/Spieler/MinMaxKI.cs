@@ -25,11 +25,11 @@ namespace VierGewinnt.Spieler
             return bewerteterSpielzug.Zug;
         }
 
-        private BewerteterSpielzug ErhalteDenBestenZug(Spielstellung stellung, int tiefe)
+        private BewerteterSpielzug ErhalteDenBestenZug(Spielstellung stellung, int aktuelleTiefe)
         {
             List<Spielzug> züge = stellung.MöglicheZüge().ToList();
             List<BewerteterSpielzug> bewerteteZüge =
-                züge.Select(z => ErhalteBewertetenSpielzug(z, stellung.Kopie(), tiefe)).ToList();
+                züge.Select(z => ErhalteBewertetenSpielzug(z, stellung.Kopie(), aktuelleTiefe)).ToList();
 
             if (stellung.SpielerAmZug == Farbe.Rot)
             {
@@ -43,44 +43,52 @@ namespace VierGewinnt.Spieler
 
         private BewerteterSpielzug ErhalteSpielzugMitHöchsterBewertung(List<BewerteterSpielzug> züge)
         {
-            return züge.Aggregate((z1, z2) => ErhalteZug(z1, z2, true));
+            return züge.Aggregate((z1, z2) => ErhalteSpielzugMitHöchsterBewertung(z1, z2));
         }
 
         private BewerteterSpielzug ErhalteSpielzugMitNiedrigsterBewertung(List<BewerteterSpielzug> züge)
         {
-            return züge.Aggregate((z1, z2) => ErhalteZug(z1, z2, false));
+            return züge.Aggregate((z1, z2) => ErhalteSpielzugMitNiedrigsterBewertung(z1, z2));
         }
 
-        private BewerteterSpielzug ErhalteZug(BewerteterSpielzug zug1, BewerteterSpielzug zug2, bool höchsteBewertung)
+        private BewerteterSpielzug ErhalteSpielzugMitHöchsterBewertung(BewerteterSpielzug zug1, BewerteterSpielzug zug2)
         {
-            if(zug1.Wertung == zug2.Wertung)
+            if (zug1.Wertung == zug2.Wertung)
             {
-                return random.Next(2) == 0 ? zug1 : zug2;
+                return ErhalteZufälligenSpielzug(zug1, zug2);
             }
 
-            if(höchsteBewertung)
-            {
-                return zug1.Wertung > zug2.Wertung ? zug1 : zug2;
-            }
-            else
-            {
-                return zug1.Wertung < zug2.Wertung ? zug1 : zug2;
-            }
+            return zug1.Wertung > zug2.Wertung ? zug1 : zug2;
         }
 
-        private BewerteterSpielzug ErhalteBewertetenSpielzug(Spielzug spielzug, Spielstellung stellung, int tiefe)
+        private BewerteterSpielzug ErhalteSpielzugMitNiedrigsterBewertung(BewerteterSpielzug zug1, BewerteterSpielzug zug2)
         {
-            return new BewerteterSpielzug(spielzug, BewerteSpielzugFürRot(spielzug, stellung, tiefe));
+            if (zug1.Wertung == zug2.Wertung)
+            {
+                return ErhalteZufälligenSpielzug(zug1, zug2);
+            }
+
+            return zug1.Wertung < zug2.Wertung ? zug1 : zug2;
         }
 
-        private double BewerteSpielzugFürRot(Spielzug spielzug, Spielstellung stellung, int tiefe)
+        private BewerteterSpielzug ErhalteZufälligenSpielzug(BewerteterSpielzug zug1, BewerteterSpielzug zug2)
+        {
+            return random.Next(2) == 0 ? zug1 : zug2;
+        }
+
+        private BewerteterSpielzug ErhalteBewertetenSpielzug(Spielzug spielzug, Spielstellung stellung, int aktuelleTiefe)
+        {
+            return new BewerteterSpielzug(spielzug, BewerteSpielzugFürRot(spielzug, stellung, aktuelleTiefe));
+        }
+
+        private double BewerteSpielzugFürRot(Spielzug spielzug, Spielstellung stellung, int aktuelleTiefe)
         {
             stellung.FühreSpielzugAus(spielzug);
             Stellungsanalyse analyse = Stellungsanalyse.ErstelleAnalyse(stellung);
-           
-            if (analyse.Spielstand == Spielstand.Offen && tiefe < maximaleTiefe)
+
+            if (analyse.Spielstand == Spielstand.Offen && aktuelleTiefe < maximaleTiefe)
             {
-                return ErhalteDenBestenZug(stellung, tiefe + 1).Wertung;
+                return ErhalteDenBestenZug(stellung, aktuelleTiefe + 1).Wertung;
             }
             else
             {
