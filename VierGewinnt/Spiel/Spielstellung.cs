@@ -60,8 +60,7 @@ namespace VierGewinnt.Spiel
 
         private bool SpielzugIstGültig(Spielzug spielzug)
         {
-            return spielzug.Farbe == SpielerAmZug &&
-                spielbrett[0, spielzug.Spalte] == Farbe.Keine;
+            return spielzug.Farbe == SpielerAmZug && FeldIstFrei(0, spielzug.Spalte);
         }
 
         public void FühreSpielzugAus(Spielzug spielzug)
