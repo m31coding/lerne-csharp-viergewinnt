@@ -51,6 +51,7 @@ namespace VierGewinnt.Spiel
             for (int spalte = 0; spalte < AnzahlSpalten; spalte++)
             {
                 Spielzug spielzug = new Spielzug(SpielerAmZug, spalte);
+
                 if (SpielzugIstGültig(spielzug))
                 {
                     yield return spielzug;
