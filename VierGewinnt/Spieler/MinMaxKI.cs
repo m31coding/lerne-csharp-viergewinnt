@@ -27,9 +27,7 @@ namespace VierGewinnt.Spieler
 
         private BewerteterSpielzug ErhalteDenBestenZug(Spielstellung stellung, int aktuelleTiefe)
         {
-            List<Spielzug> züge = stellung.MöglicheZüge().ToList();
-            List<BewerteterSpielzug> bewerteteZüge =
-                züge.Select(z => ErhalteBewertetenSpielzug(z, stellung.Kopie(), aktuelleTiefe)).ToList();
+            List<BewerteterSpielzug> bewerteteZüge = ErhalteBewerteteSpielzüge(stellung, aktuelleTiefe);
 
             if (stellung.SpielerAmZug == Farbe.Rot)
             {
@@ -39,6 +37,14 @@ namespace VierGewinnt.Spieler
             {
                 return ErhalteSpielzugMitNiedrigsterBewertung(bewerteteZüge);
             }
+        }
+
+        private List<BewerteterSpielzug> ErhalteBewerteteSpielzüge(Spielstellung stellung, int aktuelleTiefe)
+        {
+            List<Spielzug> züge = stellung.MöglicheZüge().ToList();
+            List<BewerteterSpielzug> bewerteteZüge =
+                züge.Select(z => ErhalteBewertetenSpielzug(z, stellung.Kopie(), aktuelleTiefe)).ToList();
+            return bewerteteZüge;
         }
 
         private BewerteterSpielzug ErhalteSpielzugMitHöchsterBewertung(List<BewerteterSpielzug> züge)
